@@ -11,7 +11,6 @@ contract CarOwnership {
 
     // A mapping is a key/value map with the owned car plates
     mapping (string => address) car_owners_map;
-    mapping (string => uint256) payments_map;
 
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
@@ -26,20 +25,15 @@ contract CarOwnership {
     }
      
     // Function to receive Ether. msg.data must be empty
-     receive() external payable {
-
-     }
+     receive() external payable {}
     // Fallback function is called when msg.data is not empty
     fallback() external payable {}
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
-    function getAddressBalance(address _address) public view returns (uint) {
-        return _address.balance;
-    }
-    function transferAmount(address payable _to) external payable {
+    function transferBalance(address payable _to) external payable {
         require(_to == owner, "founds can be transferred only to the contract owner");
-        _to.transfer(msg.value);
+        _to.transfer(getBalance());
     }
 
     function buildCar(string calldata _car_plate) external{
