@@ -10,13 +10,12 @@ contract CarOwnership {
     address public owner;
 
     // A mapping is a key/value map with the owned car plates
-    mapping (string => uint256) car_prices_map;
     mapping (string => address) car_owners_map;
 
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
     event CarTransferred(address indexed _from, address indexed _to, string _car_plate);
-    event CarBuilt(string _car_plate, uint256 _car_price);
+    event CarBuilt(string _car_plate);
 
     /**
      * Contract initialization.
@@ -33,10 +32,9 @@ contract CarOwnership {
         return address(this).balance;
     }
 
-    function buildCar(string calldata _car_plate, uint256 _car_price) external{
+    function buildCar(string calldata _car_plate) external{
         car_owners_map[_car_plate]=owner;
-        car_prices_map[_car_plate]=_car_price;
-        emit CarBuilt(_car_plate,_car_price);
+        emit CarBuilt(_car_plate);
     }
 
     /**
@@ -50,9 +48,6 @@ contract CarOwnership {
         // If `require`'s first argument evaluates to `false`, the
         // transaction will revert.
         require(car_owners_map[_car_plate]==msg.sender, "the message sender is not ne owner of the car");
-
-        //checks the car escrow
-        require(getBalance()==car_prices_map[_car_plate],"there are problems with the payment");
 
         // Transfer car ownership.
         car_owners_map[_car_plate]= _to;
@@ -69,10 +64,6 @@ contract CarOwnership {
      */
     function getCarOwner(string calldata _car_plate) external view returns (address) {
         return car_owners_map[_car_plate];
-    }
-
-    function getCarPrice(string calldata _car_plate) external view returns (uint256) {
-        return car_prices_map[_car_plate];
     }
 
     function getOwner() external view returns(address) {

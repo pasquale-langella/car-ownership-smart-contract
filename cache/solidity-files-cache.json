@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/mnt/c/Users/Pasquale_Langella/Documents/GitHub/car-ownership-smart-contract/contracts/CarOwnership.sol": {
-      "lastModificationDate": 1725023601475,
-      "contentHash": "035ac2018149b807587fd77705e7a110",
+      "lastModificationDate": 1725025030052,
+      "contentHash": "f48f6074f7640b4d041b086c8a3bda60",
       "sourceName": "contracts/CarOwnership.sol",
       "solcConfig": {
         "version": "0.8.24",
