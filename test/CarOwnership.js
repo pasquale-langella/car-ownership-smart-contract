@@ -16,7 +16,6 @@ describe("Car Ownership contract", function () {
     await expect(carOwnershipContract.buildCar("EW722YG"))
     .to.emit(carOwnershipContract, "CarBuilt")
     .withArgs("EW722YG");
-
   });
 
   it("Checks owner owns car EW722YG after build", async function () {
@@ -24,6 +23,17 @@ describe("Car Ownership contract", function () {
     const carOwnershipContract = await ethers.deployContract("CarOwnership");
     
     expect(await carOwnershipContract.ownsCar(owner,"EW722YG"))
+  });
+
+  it("Checks car transfer", async function () {
+    const [sender, receiver] = await ethers.getSigners();
+    const carOwnershipContract = await ethers.deployContract("CarOwnership");
+
+    await carOwnershipContract.buildCar("EW722YG");
+
+    await expect(carOwnershipContract.transferCar(receiver,"EW722YG"))
+    .to.emit(carOwnershipContract, "CarTransferred")
+    .withArgs(sender,receiver,"EW722YG");
   });
 
 });

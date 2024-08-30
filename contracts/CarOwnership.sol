@@ -14,7 +14,7 @@ contract CarOwnership {
 
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
-    event Transfer(address indexed _from, address indexed _to, string _car_plate);
+    event CarTransferred(address indexed _from, address indexed _to, string _car_plate);
     event CarBuilt(string _car_plate);
 
     /**
@@ -39,7 +39,7 @@ contract CarOwnership {
      * The `external` modifier makes a function *only* callable from *outside*
      * the contract.
      */
-    function transfer(address _to, string calldata _car_plate) external {
+    function transferCar(address _to, string calldata _car_plate) external {
         // Check if the transaction sender is the owner of the car.
         // If `require`'s first argument evaluates to `false`, the
         // transaction will revert.
@@ -51,7 +51,7 @@ contract CarOwnership {
         car_plates_map[msg.sender][_car_plate]=false;
 
         // Notify off-chain applications of the transfer.
-        emit Transfer(msg.sender, _to, _car_plate);
+        emit CarTransferred(msg.sender, _to, _car_plate);
     }
 
     /**
