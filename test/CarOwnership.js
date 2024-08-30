@@ -25,7 +25,7 @@ describe("Car Ownership contract", function () {
 
     const { carOwnershipContract, owner } = await loadFixture(deployCarOwnershipFixture);
 
-    expect(await carOwnershipContract.getOwner()).equal.to(owner);
+    expect(await carOwnershipContract.getOwner()).equal(owner);
   });
 
   it("Checks car build", async function () {
@@ -47,7 +47,8 @@ describe("Car Ownership contract", function () {
     const { carOwnershipContract, owner, buyer } = await loadFixture(deployCarOwnershipFixture);
 
     //build a car
-    await carOwnershipContract.buildCar("EW722YG");
+    const car_plate = "EW722YG"
+    await carOwnershipContract.buildCar(car_plate);
 
     //buyer transfers some money on the contract
     const amount = 15;
@@ -59,13 +60,16 @@ describe("Car Ownership contract", function () {
     //owner checks that the requested amount was transferred to the contract
     expect(await carOwnershipContract.getBalance()).equal(amount);
     
+    //transfers the money to the owner account
+    await carOwnershipContract.transferAmount(owner,{value:amount});
+
     //owner performs the transfer of car property
-    await expect(carOwnershipContract.transferCar(buyer,"EW722YG"))
+    await expect(carOwnershipContract.transferCar(buyer,car_plate))
     .to.emit(carOwnershipContract, "CarTransferred")
-    .withArgs(owner,buyer,"EW722YG");
+    .withArgs(owner,buyer,car_plate);
 
     //checks that the car property is transferred
-    expect(await carOwnershipContract.getCarOwner("EW722YG")).equal(buyer)
+    expect(await carOwnershipContract.getCarOwner(car_plate)).equal(buyer)
   });
 
 });
