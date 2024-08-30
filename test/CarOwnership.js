@@ -42,4 +42,19 @@ describe("Car Ownership contract", function () {
     .withArgs(owner,buyer,"EW722YG");
   });
 
+  it("Checks that the transfer fails if the payment has problems", async function () {
+    const [owner, buyer] = await ethers.getSigners();
+    const carOwnershipContract = await ethers.deployContract("CarOwnership");
+
+    await carOwnershipContract.buildCar("EW722YG",15);
+
+    const transactionHash = await owner.sendTransaction({
+        to: carOwnershipContract.target,
+        value: 10,
+      });
+
+    await expect(carOwnershipContract.transferCar(buyer,"EW722YG"))
+    .to.be.revertedWith("there are problems with the payment");
+  });
+
 });

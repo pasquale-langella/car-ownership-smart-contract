@@ -12,7 +12,6 @@ contract CarOwnership {
     // A mapping is a key/value map with the owned car plates
     mapping (string => uint256) car_prices_map;
     mapping (string => address) car_owners_map;
-    mapping (string => address) escrow_map;
 
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
@@ -32,11 +31,6 @@ contract CarOwnership {
     fallback() external payable {}
     function getBalance() public view returns (uint) {
         return address(this).balance;
-    }
-
-
-     function getOwner() external view returns(address) {
-       return owner;
     }
 
     function buildCar(string calldata _car_plate, uint256 _car_price) external{
@@ -79,5 +73,9 @@ contract CarOwnership {
 
     function getCarPrice(string calldata _car_plate) external view returns (uint256) {
         return car_prices_map[_car_plate];
+    }
+
+    function getOwner() external view returns(address) {
+       return owner;
     }
 }
