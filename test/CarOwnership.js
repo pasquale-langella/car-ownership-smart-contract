@@ -13,27 +13,33 @@ describe("Car Ownership contract", function () {
     const [owner] = await ethers.getSigners();
     const carOwnershipContract = await ethers.deployContract("CarOwnership");
 
-    await expect(carOwnershipContract.buildCar("EW722YG"))
+    await expect(carOwnershipContract.buildCar("EW722YG",15))
     .to.emit(carOwnershipContract, "CarBuilt")
-    .withArgs("EW722YG");
+    .withArgs("EW722YG",15);
   });
 
   it("Checks owner owns car EW722YG after build", async function () {
     const [owner] = await ethers.getSigners();
     const carOwnershipContract = await ethers.deployContract("CarOwnership");
     
-    expect(await carOwnershipContract.ownsCar(owner,"EW722YG"))
+    await carOwnershipContract.buildCar("EW722YG",15)
+    expect(await carOwnershipContract.getCarOwner("EW722YG")).equal(owner)
   });
 
   it("Checks car transfer", async function () {
-    const [sender, receiver] = await ethers.getSigners();
+    const [owner, buyer] = await ethers.getSigners();
     const carOwnershipContract = await ethers.deployContract("CarOwnership");
 
-    await carOwnershipContract.buildCar("EW722YG");
+    await carOwnershipContract.buildCar("EW722YG",15);
 
-    await expect(carOwnershipContract.transferCar(receiver,"EW722YG"))
+    const transactionHash = await owner.sendTransaction({
+        to: carOwnershipContract.target,
+        value: 15,
+      });
+
+    await expect(carOwnershipContract.transferCar(buyer,"EW722YG"))
     .to.emit(carOwnershipContract, "CarTransferred")
-    .withArgs(sender,receiver,"EW722YG");
+    .withArgs(owner,buyer,"EW722YG");
   });
 
 });
