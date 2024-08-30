@@ -15,6 +15,7 @@ contract CarOwnership {
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
     event Transfer(address indexed _from, address indexed _to, string _car_plate);
+    event CarBuilt(string _car_plate);
 
     /**
      * Contract initialization.
@@ -23,12 +24,13 @@ contract CarOwnership {
         owner = msg.sender;
     }
 
-     function getOwner() external view returns (address) {
+     function getOwner() external view returns(address) {
        return owner;
     }
 
-    function buildCar(string calldata _plate) external {
-        car_plates_map[owner][_plate]=true;
+    function buildCar(string calldata _car_plate) external{
+        car_plates_map[owner][_car_plate]=true;
+        emit CarBuilt(_car_plate);
     }
 
     /**
