@@ -61,7 +61,7 @@ describe("Car Ownership contract", function () {
     expect(await carOwnershipContract.getBalance()).equal(amount);
     
     //transfers the money to the owner account
-    await carOwnershipContract.transferBalance(owner);
+    await carOwnershipContract.transferBalanceToOwner();
 
     //owner performs the transfer of car property
     await expect(carOwnershipContract.transferCar(buyer,car_plate))

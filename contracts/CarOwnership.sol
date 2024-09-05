@@ -23,17 +23,21 @@ contract CarOwnership {
     constructor() {
         owner = msg.sender;
     }
-     
+
     // Function to receive Ether. msg.data must be empty
-     receive() external payable {}
+    receive() external payable {}
     // Fallback function is called when msg.data is not empty
     fallback() external payable {}
+
     function getBalance() public view returns (uint) {
         return address(this).balance;
     }
-    function transferBalance(address payable _to) external payable {
-        require(_to == owner, "founds can be transferred only to the contract owner");
-        _to.transfer(getBalance());
+
+    function payCar() external payable{}
+
+    //transfers the smart contract balance to the owner
+    function transferBalanceToOwner() external payable {
+        payable(owner).transfer(getBalance());
     }
 
     function buildCar(string calldata _car_plate) external{
