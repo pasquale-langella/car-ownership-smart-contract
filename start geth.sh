@@ -1,0 +1,1 @@
+geth --http --http.corsdomain="https://remix.ethereum.org" --http.api web3,eth,debug,personal,net --vmdebug --ipcdisable --datadir RemixNode --dev console
