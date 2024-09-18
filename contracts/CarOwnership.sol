@@ -37,8 +37,6 @@ contract CarOwnership {
         return address(this).balance;
     }
 
-    function payCar() external payable{}
-
     function makeOffer(string calldata _car_plate) external payable{
         require(msg.value > 0, "Offer must be greater than 0");
         // Store the offer in the offers_map mapping
