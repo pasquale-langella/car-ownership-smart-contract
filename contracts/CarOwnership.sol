@@ -9,8 +9,12 @@ pragma solidity ^0.8.0;
 contract CarOwnership {
     address public owner;
 
-    // A mapping is a key/value map with the owned car plates
+    //key/value map with the owned car plates
     mapping (string => address) car_owners_map;
+
+    //map with the car plate that includes another map with offerer and offered value
+    mapping(address => mapping (string => uint256)) offers_map;
+
 
     // The Transfer event helps off-chain applications understand
     // what happens within your contract.
@@ -35,6 +39,12 @@ contract CarOwnership {
 
     function payCar() external payable{}
 
+    function makeOffer(string calldata _car_plate) external payable{
+        require(msg.value > 0, "Offer must be greater than 0");
+        // Store the offer in the offers_map mapping
+        offers_map[msg.sender][_car_plate] = msg.value;
+    }
+
     //transfers the smart contract balance to the owner
     function transferBalanceToOwner() external payable {
         payable(owner).transfer(getBalance());
@@ -56,7 +66,13 @@ contract CarOwnership {
         // If `require`'s first argument evaluates to `false`, the
         // transaction will revert.
         require(car_owners_map[_car_plate]==msg.sender, "the message sender is not ne owner of the car");
+        
+        uint256 offer = offers_map[_to][_car_plate];
+        require(offer>0, "there is no offer for the car for the specified buyer");
 
+        //transfer money to owner
+        payable(owner).transfer(offer);
+        
         // Transfer car ownership.
         car_owners_map[_car_plate]= _to;
 

@@ -43,6 +43,18 @@ describe("Car Ownership contract", function () {
     expect(await carOwnershipContract.getCarOwner("EW722YG")).equal(owner)
   });
 
+  it("Makes an offer for the car EW722YG", async function () {
+    const { carOwnershipContract, owner, buyer } = await loadFixture(deployCarOwnershipFixture);
+    carPlate = "EW722YG";
+    const offerAmount = 15; // 15 Ether
+
+    await expect(
+      carOwnershipContract.connect(buyer).makeOffer(carPlate, { value: offerAmount })
+    ).to.changeEtherBalances([buyer, carOwnershipContract], [-offerAmount, offerAmount]);
+
+  });
+
+
   it("Checks car transfer", async function () {
     const { carOwnershipContract, owner, buyer } = await loadFixture(deployCarOwnershipFixture);
 
