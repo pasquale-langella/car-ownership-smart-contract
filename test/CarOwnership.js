@@ -62,18 +62,8 @@ describe("Car Ownership contract", function () {
     const car_plate = "EW722YG"
     await carOwnershipContract.buildCar(car_plate);
 
-    //buyer transfers some money on the contract
-    const amount = 15;
-    const transactionHash = await buyer.sendTransaction({
-        to: carOwnershipContract.target,
-        value: amount,
-      });
-    
-    //owner checks that the requested amount was transferred to the contract
-    expect(await carOwnershipContract.getBalance()).equal(amount);
-    
-    //transfers the money to the owner account
-    await carOwnershipContract.transferBalanceToOwner();
+    //buyer makes an offer
+    carOwnershipContract.connect(buyer).makeOffer(car_plate, { value: 15 });
 
     //owner performs the transfer of car property
     await expect(carOwnershipContract.transferCar(buyer,car_plate))
@@ -82,6 +72,17 @@ describe("Car Ownership contract", function () {
 
     //checks that the car property is transferred
     expect(await carOwnershipContract.getCarOwner(car_plate)).equal(buyer)
+  });
+
+  it("Checks car transfer failure if there is no offer", async function () {
+    const { carOwnershipContract, owner, buyer } = await loadFixture(deployCarOwnershipFixture);
+
+    //build a car
+    const car_plate = "EW722YG"
+    await carOwnershipContract.buildCar(car_plate);
+
+    //owner performs the transfer of car property
+    await expect(carOwnershipContract.transferCar(buyer,car_plate)).to.be.revertedWith("there is no offer for the car for the specified buyer");
   });
 
 });
